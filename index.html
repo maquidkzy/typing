@@ -3,33 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>type.</title>
+  <title>Type Anything</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;1,14..32,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=K2D:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ──────────────────────────────────────────
-       THEMES  [data-theme] × [data-mode]
+       THEMES
        ────────────────────────────────────────── */
-    :root { --dur: 0.25s; }
+    [data-theme="black"][data-mode="dark"]  { --bg:#2b2b2b; --fg:#d1d0c5; --dim:#646669; --ac:#e2b714; --s1:rgba(255,255,255,.05); --s2:rgba(255,255,255,.10); }
+    [data-theme="black"][data-mode="light"] { --bg:#f5f5f0; --fg:#2c2c2c; --dim:#9a9a9a; --ac:#b38f00; --s1:rgba(0,0,0,.04);       --s2:rgba(0,0,0,.10); }
 
-    /* Ink */
-    [data-theme="black"][data-mode="dark"]  { --bg:#0d0d0d; --fg:#e2e2e2; --dim:#484848; --ac:#808080; --s1:rgba(255,255,255,.05); --s2:rgba(255,255,255,.11); }
-    [data-theme="black"][data-mode="light"] { --bg:#f8f8f8; --fg:#1a1a1a; --dim:#b0b0b0; --ac:#606060; --s1:rgba(0,0,0,.04);       --s2:rgba(0,0,0,.10); }
+    [data-theme="sepia"][data-mode="dark"]  { --bg:#1c1510; --fg:#dfc9a2; --dim:#6b5030; --ac:#d4943a; --s1:rgba(223,201,162,.05); --s2:rgba(223,201,162,.12); }
+    [data-theme="sepia"][data-mode="light"] { --bg:#f6f1e8; --fg:#3a2410; --dim:#c0a070; --ac:#9a6020; --s1:rgba(58,36,16,.04);    --s2:rgba(58,36,16,.12); }
 
-    /* Sepia */
-    [data-theme="sepia"][data-mode="dark"]  { --bg:#1a1410; --fg:#dfc9a2; --dim:#5a4030; --ac:#987848; --s1:rgba(223,201,162,.05); --s2:rgba(223,201,162,.11); }
-    [data-theme="sepia"][data-mode="light"] { --bg:#f6f1e8; --fg:#3a2410; --dim:#c0a070; --ac:#7a5028; --s1:rgba(58,36,16,.04);    --s2:rgba(58,36,16,.10); }
-
-    /* Navy */
-    [data-theme="navy"][data-mode="dark"]   { --bg:#090d1a; --fg:#b8cce0; --dim:#1e2a40; --ac:#4878b0; --s1:rgba(184,204,224,.05); --s2:rgba(184,204,224,.11); }
-    [data-theme="navy"][data-mode="light"]  { --bg:#e8eef8; --fg:#0c1e38; --dim:#7090c0; --ac:#1848a0; --s1:rgba(12,30,56,.04);    --s2:rgba(12,30,56,.10); }
+    [data-theme="navy"][data-mode="dark"]   { --bg:#0e1221; --fg:#b8cce0; --dim:#2e3e5e; --ac:#5b9bd5; --s1:rgba(184,204,224,.05); --s2:rgba(184,204,224,.12); }
+    [data-theme="navy"][data-mode="light"]  { --bg:#e8eef8; --fg:#0c1e38; --dim:#7090c0; --ac:#2060c8; --s1:rgba(12,30,56,.04);    --s2:rgba(12,30,56,.12); }
 
     /* ──────────────────────────────────────────
        BASE
        ────────────────────────────────────────── */
+    :root {
+      --lh:  1.75;
+      --dur: 0.2s;
+      --hdr: 54px;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      /* content column: matches monkeytype proportions (~90 vw) */
+      --pad-x: 20vw;
+    }
+
     html { height: 100%; }
 
     body {
@@ -38,296 +43,289 @@
       flex-direction: column;
       background: var(--bg);
       color: var(--fg);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      overflow: hidden;
+      font-family: var(--mono);
       transition: background var(--dur), color var(--dur);
+      overflow: hidden;
+    }
+
+    ::selection { background: var(--ac); color: var(--bg); }
+
+    /* ──────────────────────────────────────────
+       CONTENT COLUMN — same width for header + editor
+       ────────────────────────────────────────── */
+    .col {
+      width: 100%;
+      padding-left: var(--pad-x);
+      padding-right: var(--pad-x);
+    }
+
+    /* ──────────────────────────────────────────
+       HEADER
+       ────────────────────────────────────────── */
+    header {
+      flex-shrink: 0;
+      height: var(--hdr);
+      display: flex;
+      align-items: center;
+    }
+
+    /* header inner: logo LEFT, toolbar CENTRE */
+    .hcol {
+      width: 100%;
+      padding-left: var(--pad-x);
+      padding-right: var(--pad-x);
+      display: flex;
+      align-items: center;
+      position: relative;   /* toolbar absolute-centres against this */
+    }
+
+    /* ── Logo ── */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      user-select: none;
+      color: inherit;
+      flex-shrink: 0;
+      z-index: 1;           /* keep above absolutely-positioned toolbar */
+    }
+
+    .logo-icon { width: 26px; height: 26px; flex-shrink: 0; }
+
+    .logo-text {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--dim);
+      letter-spacing: 0.01em;
+      transition: color var(--dur);
+    }
+
+    /* ── Toolbar (true horizontal centre of header) ── */
+    .toolbar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;          /* gap between bordered groups */
+    }
+
+    /* ── Tool group — bordered pill ── */
+    .tg {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--s1);
+      border: 1px solid var(--s2);
+      border-radius: 8px;
+      padding: 0.18rem 0.45rem;
+    }
+
+    /* tool label */
+    .tl {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--dim);
+      padding-right: 0.3rem;
+      letter-spacing: 0.07em;
+      opacity: 0.55;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* tool button */
+    .tb {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 400;
+      padding: 0.22rem 0.45rem;
+      border: none;
+      background: none;
+      color: var(--dim);
+      cursor: pointer;
+      letter-spacing: 0.025em;
+      border-radius: 5px;
+      transition: color var(--dur);
+      white-space: nowrap;
+    }
+    .tb:hover { color: var(--fg); }
+    .tb.on    { color: var(--ac); }
+
+    /* count value */
+    #count {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--ac);
+      padding: 0.22rem 0.3rem;
+      min-width: 4ch;
+      letter-spacing: 0.05em;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+
+    /* ──────────────────────────────────────────
+       MAIN — editor vertically centered
+       ────────────────────────────────────────── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
     }
 
     /* ──────────────────────────────────────────
        EDITOR
        ────────────────────────────────────────── */
     #editor {
-      flex: 1;
+      display: block;
       width: 100%;
-      /* horizontal padding scales with viewport */
-      padding: clamp(2.5rem, 6vh, 5rem) clamp(2rem, 8vw, 8rem) 5rem;
+      /* max 10 lines tall; shrink if not enough viewport room */
+      height: calc(10 * var(--lh) * 1em);
+      max-height: calc(100vh - var(--hdr) - 4rem);
       background: transparent;
       border: none;
       outline: none;
       resize: none;
       color: var(--fg);
-      font-family: inherit;
-      font-size: 2rem;       /* overridden by JS */
+      font-family: 'K2D', system-ui, -apple-system, sans-serif;
+      font-size: 2rem;          /* overridden by JS */
       font-weight: 300;
-      line-height: 1.75;
+      line-height: var(--lh);
       letter-spacing: -0.015em;
       caret-color: var(--ac);
       overflow-y: auto;
-      scrollbar-width: none;   /* Firefox */
+      scrollbar-width: none;
       -ms-overflow-style: none;
-      transition: color var(--dur), background var(--dur);
-      /* fade in */
+      transition: color var(--dur), background var(--dur), font-size 0.15s ease;
       opacity: 0;
-      animation: fade-in 0.55s 0.05s ease forwards;
+      animation: fade-in 0.4s 0.08s ease forwards;
     }
     #editor::-webkit-scrollbar { display: none; }
-    #editor::placeholder { color: var(--dim); font-style: italic; }
-
-    /* text selection */
-    ::selection { background: var(--ac); color: var(--bg); }
+    #editor::placeholder {
+      color: var(--dim);
+      font-style: italic;
+      opacity: 0.45;
+    }
 
     @keyframes fade-in { to { opacity: 1; } }
-
-    /* ──────────────────────────────────────────
-       TOOLBAR
-       ────────────────────────────────────────── */
-    #bar {
-      position: fixed;
-      inset: auto 0 0 0;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.375rem;
-      padding: 1.25rem 1.5rem 0.9rem;
-      /* fade out the editor text underneath */
-      background: linear-gradient(transparent, var(--bg) 42%);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.28s ease, transform 0.28s ease, background var(--dur);
-      pointer-events: none;
-      z-index: 10;
-    }
-    #bar.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    /* stats */
-    #stats {
-      font-size: 0.72rem;
-      color: var(--dim);
-      letter-spacing: 0.05em;
-      min-width: 16ch;
-      transition: color var(--dur);
-    }
-
-    /* flexible gap */
-    .gap { flex: 1; min-width: 0.5rem; }
-
-    /* thin separator */
-    .sep {
-      width: 1px;
-      height: 14px;
-      background: var(--dim);
-      opacity: 0.35;
-      margin: 0 0.2rem;
-    }
-
-    /* ── Buttons ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.35rem 0.65rem;
-      border: none;
-      border-radius: 6px;
-      background: var(--s1);
-      color: var(--dim);
-      font: 300 0.72rem/1 inherit;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      transition: background var(--dur), color var(--dur);
-      white-space: nowrap;
-    }
-    .btn:hover { background: var(--s2); color: var(--fg); }
-    .btn svg   { width: 13px; height: 13px; flex-shrink: 0; }
-
-    /* font-size display (not interactive) */
-    #fval {
-      pointer-events: none;
-      background: none;
-      min-width: 3.6ch;
-      justify-content: center;
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* ── Theme pills ── */
-    #themes { display: flex; gap: 0.25rem; align-items: center; }
-
-    .pill {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: border-color 0.2s ease, transform 0.15s ease;
-      padding: 0;
-    }
-    .pill:hover { transform: scale(1.2); }
-    .pill.on    { border-color: var(--fg); }
-
-    /* half dark / half light per theme */
-    .pill[data-t="black"] { background: conic-gradient(#0d0d0d 50%, #f8f8f8 50%); }
-    .pill[data-t="sepia"] { background: conic-gradient(#1a1410 50%, #f6f1e8 50%); }
-    .pill[data-t="navy"]  { background: conic-gradient(#090d1a 50%, #e8eef8 50%); }
-
-    /* ── Mode icon button ── */
-    #bmode { font-size: 0.85rem; padding: 0.3rem 0.45rem; }
-
-    /* ──────────────────────────────────────────
-       STARTUP HINT  (shown once if no saved text)
-       ────────────────────────────────────────── */
-    #hint {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: var(--dim);
-      font-size: 0.88rem;
-      font-weight: 300;
-      line-height: 1.8;
-      text-align: center;
-      pointer-events: none;
-      opacity: 0;
-      animation: hint-anim 5s ease forwards;
-    }
-    #hint small { font-size: 0.7rem; opacity: 0.6; }
-    @keyframes hint-anim {
-      10%  { opacity: 1; }
-      75%  { opacity: 1; }
-      100% { opacity: 0; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- startup hint -->
-  <div id="hint">
-    start typing&hellip;<br>
-    <small>hover the bottom edge for options &nbsp;·&nbsp; Ctrl+scroll to resize</small>
-  </div>
+  <!-- ════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════ -->
+  <header>
+    <div class="hcol">
 
-  <!-- main editor -->
-  <textarea
-    id="editor"
-    placeholder="start typing…"
-    spellcheck="false"
-    autocomplete="off"
-    autocorrect="off"
-    autocapitalize="off"
-  ></textarea>
+      <!-- Logo (left) -->
+      <a class="logo" href="#" onclick="return false;" tabindex="-1">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="6" width="26" height="23" rx="5" fill="var(--ac)" opacity="0.3"/>
+          <rect x="3" y="3" width="26" height="23" rx="5" fill="var(--ac)"/>
+          <rect x="6" y="6" width="20" height="14" rx="2.5" fill="var(--bg)" opacity="0.2"/>
+          <text
+            x="16" y="18.5"
+            text-anchor="middle"
+            font-family="'JetBrains Mono', monospace"
+            font-size="12"
+            font-weight="700"
+            fill="var(--bg)"
+          >A</text>
+        </svg>
+        <span class="logo-text">type anything</span>
+      </a>
 
-  <!-- toolbar (auto-hides) -->
-  <div id="bar">
+      <!-- Toolbar (centred absolutely within .hcol) -->
+      <nav class="toolbar" id="toolbar">
 
-    <!-- word/char count -->
-    <span id="stats">0 words · 0 chars</span>
+        <!-- Size -->
+        <div class="tg">
+          <span class="tl">size</span>
+          <button class="tb on" data-act="size" data-val="small">small</button>
+          <button class="tb"    data-act="size" data-val="medium">medium</button>
+          <button class="tb"    data-act="size" data-val="large">large</button>
+        </div>
 
-    <div class="gap"></div>
+        <!-- Theme -->
+        <div class="tg">
+          <span class="tl">theme</span>
+          <button class="tb on" data-act="theme" data-val="black">ink</button>
+          <button class="tb"    data-act="theme" data-val="sepia">sepia</button>
+          <button class="tb"    data-act="theme" data-val="navy">navy</button>
+        </div>
 
-    <!-- font size controls -->
-    <button class="btn" id="fminus" title="Smaller (Ctrl −)">
-      <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" fill="none">
-        <line x1="2" y1="7" x2="12" y2="7"/>
-      </svg>
-    </button>
-    <span class="btn" id="fval">2.0</span>
-    <button class="btn" id="fplus" title="Larger (Ctrl +)">
-      <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" fill="none">
-        <line x1="7" y1="2" x2="7" y2="12"/>
-        <line x1="2" y1="7" x2="12" y2="7"/>
-      </svg>
-    </button>
+        <!-- Mode -->
+        <div class="tg">
+          <button class="tb on" data-act="mode" data-val="dark">dark</button>
+          <button class="tb"    data-act="mode" data-val="light">light</button>
+        </div>
 
-    <div class="sep"></div>
+        <!-- Count -->
+        <div class="tg">
+          <span class="tl">count</span>
+          <span id="count">0</span>
+        </div>
 
-    <!-- copy all -->
-    <button class="btn" id="bcopy" title="Copy all text">
-      <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" fill="none">
-        <rect x="4" y="4" width="8" height="8" rx="1.5"/>
-        <path d="M2 10V2a1 1 0 011-1h8"/>
-      </svg>
-      copy
-    </button>
+      </nav>
 
-    <!-- clear -->
-    <button class="btn" id="bclear" title="Clear all text">
-      <svg viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" fill="none">
-        <line x1="2" y1="2" x2="12" y2="12"/>
-        <line x1="12" y1="2" x2="2" y2="12"/>
-      </svg>
-      clear
-    </button>
-
-    <!-- fullscreen -->
-    <button class="btn" id="bfs" title="Toggle fullscreen (F11)">
-      <svg id="fs-icon" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" fill="none">
-        <path d="M2 5V2h3M9 2h3v3M12 9v3H9M5 12H2V9"/>
-      </svg>
-    </button>
-
-    <div class="sep"></div>
-
-    <!-- light / dark toggle -->
-    <button class="btn" id="bmode" title="Toggle light / dark">☀️</button>
-
-    <!-- theme switcher -->
-    <div id="themes">
-      <button class="pill on" data-t="black" title="Ink"></button>
-      <button class="pill"    data-t="sepia" title="Sepia"></button>
-      <button class="pill"    data-t="navy"  title="Navy"></button>
     </div>
+  </header>
 
-  </div><!-- #bar -->
+  <!-- ════════════════════════════════════════
+       EDITOR — centred in remaining space
+       ════════════════════════════════════════ -->
+  <main>
+    <div class="col">
+      <textarea
+        id="editor"
+        placeholder="start typing…"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+      ></textarea>
+    </div>
+  </main>
 
   <script>
-    /* ── helpers ── */
     const $ = id => document.getElementById(id);
     const root = document.documentElement;
     const ed   = $('editor');
-    const bar  = $('bar');
 
-    /* ── storage keys ── */
     const S_TEXT = 'type_text';
     const S_PREF = 'type_pref';
 
-    /* ── font size state ── */
-    const FS_MIN = 0.75, FS_MAX = 5.0, FS_STEP = 0.25;
-    let fs = 2.0;
+    /* size → font-size in rem */
+    const SIZES = { small: 2, medium: 3.25, large: 5 };
+    let currentSize = 'small';
 
-    /* ── toolbar timer ── */
-    let barTimer;
-
-    /* ═══════════════════════════════════════
+    /* ═══════════════════════════════════════════
        INIT
-       ═══════════════════════════════════════ */
+       ═══════════════════════════════════════════ */
     function init() {
-      /* restore text */
       ed.value = localStorage.getItem(S_TEXT) || '';
-      updateStats();
+      updateCount();
 
-      /* restore prefs */
       try {
         const p = JSON.parse(localStorage.getItem(S_PREF) || '{}');
-        if (p.theme) root.dataset.theme = p.theme;
-        if (p.mode)  root.dataset.mode  = p.mode;
-        if (p.fs && isFinite(p.fs)) fs = p.fs;
-      } catch { /* ignore corrupt data */ }
+        if (p.theme && ['black','sepia','navy'].includes(p.theme)) {
+          root.dataset.theme = p.theme;
+          syncGroup('theme', p.theme);
+        }
+        if (p.mode && ['dark','light'].includes(p.mode)) {
+          root.dataset.mode = p.mode;
+          syncGroup('mode', p.mode);
+        }
+        if (p.size && SIZES[p.size]) {
+          currentSize = p.size;
+          syncGroup('size', p.size);
+        }
+      } catch { /* ignore */ }
 
-      applyFs();
-      syncPills();
-      syncMode();
-
-      /* hide hint immediately if editor already has content */
-      if (ed.value.trim()) {
-        const hint = $('hint');
-        if (hint) hint.style.display = 'none';
-      }
-
+      applySize(currentSize);
       ed.focus();
     }
 
@@ -335,164 +333,54 @@
       localStorage.setItem(S_PREF, JSON.stringify({
         theme: root.dataset.theme,
         mode:  root.dataset.mode,
-        fs,
+        size:  currentSize,
       }));
     }
 
-    /* ═══════════════════════════════════════
-       STATS
-       ═══════════════════════════════════════ */
-    function updateStats() {
-      const t = ed.value;
-      const w = t.trim() === '' ? 0 : t.trim().split(/\s+/).length;
-      const c = t.length;
-      $('stats').textContent =
-        `${w} word${w !== 1 ? 's' : ''} · ${c} char${c !== 1 ? 's' : ''}`;
+    /* ═══════════════════════════════════════════
+       COUNT
+       ═══════════════════════════════════════════ */
+    function updateCount() {
+      $('count').textContent = ed.value.length;
     }
 
     ed.addEventListener('input', () => {
       localStorage.setItem(S_TEXT, ed.value);
-      updateStats();
+      updateCount();
     });
 
-    /* ═══════════════════════════════════════
-       FONT SIZE
-       ═══════════════════════════════════════ */
-    function applyFs() {
-      ed.style.fontSize = fs + 'rem';
-      $('fval').textContent = fs.toFixed(1);
+    /* ═══════════════════════════════════════════
+       SIZE
+       ═══════════════════════════════════════════ */
+    function applySize(name) {
+      ed.style.fontSize = (SIZES[name] ?? SIZES.small) + 'rem';
     }
 
-    function changeFs(delta) {
-      fs = parseFloat(
-        Math.min(FS_MAX, Math.max(FS_MIN, fs + delta)).toFixed(2)
+    /* ═══════════════════════════════════════════
+       TOOLBAR
+       ═══════════════════════════════════════════ */
+    function syncGroup(act, val) {
+      document.querySelectorAll(`[data-act="${act}"]`).forEach(btn =>
+        btn.classList.toggle('on', btn.dataset.val === val)
       );
-      applyFs();
-      savePrefs();
     }
 
-    $('fplus').onclick  = () => changeFs(+FS_STEP);
-    $('fminus').onclick = () => changeFs(-FS_STEP);
+    $('toolbar').addEventListener('click', e => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn) return;
+      const { act, val } = btn.dataset;
 
-    /* keyboard shortcut: Ctrl + / Ctrl − */
-    document.addEventListener('keydown', e => {
-      if (!e.ctrlKey) return;
-      if (e.key === '=' || e.key === '+') { e.preventDefault(); changeFs(+FS_STEP); }
-      if (e.key === '-')                  { e.preventDefault(); changeFs(-FS_STEP); }
-    });
+      if      (act === 'size')  { currentSize = val; applySize(val); }
+      else if (act === 'theme') { root.dataset.theme = val; }
+      else if (act === 'mode')  { root.dataset.mode  = val; }
 
-    /* Ctrl + scroll wheel */
-    ed.addEventListener('wheel', e => {
-      if (!e.ctrlKey) return;
-      e.preventDefault();
-      changeFs(e.deltaY < 0 ? +FS_STEP : -FS_STEP);
-    }, { passive: false });
-
-    /* ═══════════════════════════════════════
-       COPY
-       ═══════════════════════════════════════ */
-    $('bcopy').addEventListener('click', async () => {
-      if (!ed.value) return;
-      const btn = $('bcopy');
-      const orig = btn.innerHTML;
-      try {
-        await navigator.clipboard.writeText(ed.value);
-        btn.textContent = '✓ copied';
-      } catch {
-        /* fallback: select all + execCommand */
-        ed.select();
-        document.execCommand('copy');
-        btn.textContent = '✓ copied';
-      }
-      setTimeout(() => { btn.innerHTML = orig; }, 1800);
-    });
-
-    /* ═══════════════════════════════════════
-       CLEAR
-       ═══════════════════════════════════════ */
-    $('bclear').addEventListener('click', () => {
-      if (!ed.value) return;
-      if (confirm('Clear all text?')) {
-        ed.value = '';
-        localStorage.removeItem(S_TEXT);
-        updateStats();
-        ed.focus();
-      }
-    });
-
-    /* ═══════════════════════════════════════
-       FULLSCREEN
-       ═══════════════════════════════════════ */
-    $('bfs').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        root.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen();
-      }
-    });
-
-    document.addEventListener('fullscreenchange', () => {
-      $('fs-icon').innerHTML = document.fullscreenElement
-        /* exit icon */
-        ? '<path d="M5 2v3H2M9 2h3v3M9 12v-3h3M5 12H2V9"/>'
-        /* enter icon */
-        : '<path d="M2 5V2h3M9 2h3v3M12 9v3H9M5 12H2V9"/>';
-    });
-
-    /* ═══════════════════════════════════════
-       THEME  (3 themes × 2 modes)
-       ═══════════════════════════════════════ */
-    function syncPills() {
-      document.querySelectorAll('.pill').forEach(p =>
-        p.classList.toggle('on', p.dataset.t === root.dataset.theme));
-    }
-
-    function syncMode() {
-      $('bmode').textContent = root.dataset.mode === 'dark' ? '☀️' : '🌙';
-    }
-
-    document.querySelectorAll('.pill').forEach(p =>
-      p.addEventListener('click', () => {
-        root.dataset.theme = p.dataset.t;
-        syncPills();
-        savePrefs();
-      })
-    );
-
-    $('bmode').addEventListener('click', () => {
-      root.dataset.mode = root.dataset.mode === 'dark' ? 'light' : 'dark';
-      syncMode();
+      syncGroup(act, val);
       savePrefs();
     });
 
-    /* ═══════════════════════════════════════
-       TOOLBAR  auto-show / auto-hide
-       ═══════════════════════════════════════ */
-    function showBar(holdMs = 2600) {
-      bar.classList.add('show');
-      clearTimeout(barTimer);
-      barTimer = setTimeout(() => {
-        if (!bar.matches(':hover')) bar.classList.remove('show');
-      }, holdMs);
-    }
-
-    /* show when mouse approaches bottom edge */
-    document.addEventListener('mousemove', e => {
-      if (e.clientY > window.innerHeight - 88) showBar();
-    });
-
-    /* keep visible while hovering the bar itself */
-    bar.addEventListener('mouseenter', () => {
-      clearTimeout(barTimer);
-      bar.classList.add('show');
-    });
-    bar.addEventListener('mouseleave', () => {
-      barTimer = setTimeout(() => bar.classList.remove('show'), 700);
-    });
-
-    /* ═══════════════════════════════════════
+    /* ═══════════════════════════════════════════
        START
-       ═══════════════════════════════════════ */
+       ═══════════════════════════════════════════ */
     init();
   </script>
 </body>
